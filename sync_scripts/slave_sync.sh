@@ -1,4 +1,4 @@
-#!/bin/bash/
+#!/bin/bash
 #title           :slave_sync.sh
 #description     :This script will sync and publish all repos only on the child node 
 #author          :Rohan Dsouza
