@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash/
 #title           :slave_sync.sh
 #description     :This script will sync and publish all repos only on the child node 
 #author          :Rohan Dsouza
@@ -21,17 +21,17 @@ fi
 # Ends here--> 
 
 
-if [ $(diff /opt/scripts/all_repos.txt <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | wc -l) -ne 0 ]
+if [ $(diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | wc -l) -ne 0 ]
 	then
-		if [ $(diff /opt/scripts/all_repos.txt <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep "<" | wc -l) -ne 0 ]
+		if [ $(diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep "<" | wc -l) -ne 0 ]
 			then
-			for i in `diff /opt/scripts/all_repos.txt <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep "<" | sed 's/<//'`
+			for i in `diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep "<" | sed 's/<//'`
 			do
 			# Enter the IP / Name of the master server
 			pulp-admin rpm repo create --repo-id "$i" --feed http://pulpserver.local/pulp/repos/"$i"/ --relative-url "$i"/ --serve-http true
 			done
 		else
-			for i in `diff /opt/scripts/all_repos.txt <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep ">" | sed 's/>//'`
+			for i in `diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | grep ">" | sed 's/>//'`
 			do
 			pulp-admin rpm repo delete --repo-id $i
 			done
