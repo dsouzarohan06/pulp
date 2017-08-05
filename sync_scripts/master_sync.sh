@@ -59,7 +59,7 @@ EOF
 
 if [ $? -ne 0 ];
 then
-	echo "`date "+%Y-%m-%d %H:%M:%S"` Sync and publish failed for host: $i" >> /var/log/pulp/sync.log
+	echo "`date "+%Y-%m-%d %H:%M:%S"` Sync and publish failed for host: $i" >> /var/log/pulp/sync.log  # Failed syncs will be logged here
 fi
 done  
 
