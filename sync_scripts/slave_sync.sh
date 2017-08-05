@@ -18,8 +18,10 @@ then
         pulp-admin login -u admin -p admin
 fi
 
-# Ends here--> 
+# Ends here --> 
 
+
+# <-- Mirroring of repos from the Master. Creation and deletion of a repo will happen here
 
 if [ $(diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | wc -l) -ne 0 ]
 	then
@@ -38,8 +40,17 @@ if [ $(diff "$REPOS_FILE" <(pulp-admin repo list | grep ^Id | cut -d ":" -f2) | 
 		fi
 fi
 
+# Ends here -->
 
-for i in `pulp-admin repo list | grep -i id | cut -d ":" -f2`; do pulp-admin rpm repo sync run --repo-id "$i" ; pulp-admin rpm repo publish run --repo-id "$i"; done;
+
+# <-- Sync and publish start here
+
+for i in `pulp-admin repo list | grep -i id | cut -d ":" -f2`
+do
+	pulp-admin rpm repo sync run --repo-id "$i"
+	pulp-admin rpm repo publish run --repo-id "$i"
+done
 
 echo -e "Syncing and publishing on slave is done. \n";
 
+# Ends here -->
