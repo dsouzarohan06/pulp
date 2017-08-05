@@ -5,8 +5,10 @@
 #usage           :bash master_sync.sh  OR ./master_sync.sh
 #=========================================================================================================
 
+LOG_FILE=/var/log/pulp/sync.log
+REPOS_FILE=/opt/scripts/all_repos.txt
 
-> /opt/scripts/all_repos.txt
+> $REPOS_FILE
 
 # <-- This is to make sure that if the session certificate has expired, it will be renewed
 
@@ -15,9 +17,9 @@ pulp-admin repo list > /dev/null
 if [ $? == 77 ];
 then
 	pulp-admin login -u admin -p admin
-	pulp-admin repo list | grep ^Id | cut -d ":" -f2 >> /opt/scripts/all_repos.txt
+	pulp-admin repo list | grep ^Id | cut -d ":" -f2 >> $REPOS_FILE
 else
-	pulp-admin repo list | grep ^Id | cut -d ":" -f2 >> /opt/scripts/all_repos.txt
+	pulp-admin repo list | grep ^Id | cut -d ":" -f2 >> $REPOS_FILE
 fi
 
 # Ends here--> 
@@ -28,7 +30,7 @@ declare -a hosts=("pulp-slave-server.local")
 
 for i in "${hosts[@]}"
 do
-	rsync -parv /opt/scripts/all_repos.txt root@"$i":/opt/scripts/ 
+	rsync -parv $REPOS_FILE root@"$i":/opt/scripts/ 
 done
 
 # Ends here -->
@@ -59,7 +61,7 @@ EOF
 
 if [ $? -ne 0 ];
 then
-	echo "`date "+%Y-%m-%d %H:%M:%S"` Sync and publish failed for host: $i" >> /var/log/pulp/sync.log  # Failed syncs will be logged here
+	echo "`date "+%Y-%m-%d %H:%M:%S"` Sync and publish failed for host: $i" >> $LOG_FILE  # Failed syncs will be logged here
 fi
 done  
 
