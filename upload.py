@@ -496,6 +496,9 @@ htmlTemplate = """
     <tr>
       <td>Server => <!-- domain --></td>
     </tr>
+    <tr>
+      <td>Last synced at: </td>
+    </tr>
     <tr style ="background-color: black; color: white">
       <td><!-- realfolder --></td>
     </tr>
@@ -859,7 +862,7 @@ if action == "logout":
 if action == "login":
   # login page request
   # update informations
-  htmlTemplateLogin = htmlTemplateLogin.replace("-- title --", "Web File Manager - Login")
+  htmlTemplateLogin = htmlTemplateLogin.replace("-- title --", "Pulp Server 2.13")
   htmlTemplateLogin = htmlTemplateLogin.replace("<!-- SCRIPTNAME -->", pyname)
   print "Content-type: text/html"
   print
@@ -1033,7 +1036,7 @@ if action == "list":
   ### Folders and files list ############################## 
   strFolders += "  <tr class='rowfolder'>\r\n" + \
                 "    <td colspan='4' align='right'>" + \
-                "        <a class='dirlink' href='javascript:logout();'>log out</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \
+                "        <a class='dirlink' href='javascript:logout();'>Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \
                 "        <a class='dirlink' href='javascript:createzip();'>zip folder</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + \
                 "        <a class='dirlink' href='javascript:createfolder();'>create empty folder</a>" + \
                 "    </td>\r\n" + \
@@ -1055,7 +1058,7 @@ if action == "list":
   htmlTemplate = htmlTemplate.replace("<!-- domain -->", cgi.escape(hostName))
   htmlTemplate = htmlTemplate.replace("<!-- folder -->", cgi.escape(vfolder))
   htmlTemplate = htmlTemplate.replace("<!-- realfolder -->", cgi.escape(rfolder))
-  htmlTemplate = htmlTemplate.replace("-- title --", "Web File Manager - " + cgi.escape(vfolder))
+  htmlTemplate = htmlTemplate.replace("-- title --", "Pulp Server 2.13")
   
   # retrieve folder items list
   folderfile = os.listdir(rfolder)
@@ -1088,7 +1091,7 @@ elif action == "upload":
   
   # update informations
   htmlTemplateUpload = htmlTemplateUpload.replace("<!-- virtualfolder -->", vfolder)
-  htmlTemplateUpload = htmlTemplateUpload.replace("-- title --", "Web File Manager - Upload File ")
+  htmlTemplateUpload = htmlTemplateUpload.replace("-- title --", "Pulp Server 2.13")
   htmlTemplateUpload = htmlTemplateUpload.replace("<!-- SCRIPTNAME -->", pyname)
 
   print htmlTemplateUpload
@@ -1102,7 +1105,7 @@ elif action == "edit":
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- virtualfolder -->", vfolder)
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- FILEPATH -->", "Edit " + vfolder + "/" + editFile)
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- FILENAME -->", editFile)
-  htmlTemplateEdit = htmlTemplateEdit.replace("-- title --", "Web File Manager - Edit File " + vfolder + "/" + editFile)
+  htmlTemplateEdit = htmlTemplateEdit.replace("-- title --", "Pulp Server 2.13")
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- SCRIPTNAME -->", pyname)
   
   fd = open(os.path.join(rfolder, editFile), "r")
