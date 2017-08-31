@@ -13,9 +13,9 @@ package { 'screen':
     ensure => 'purged',
 }
 
-package { 'httpd':
-    ensure => 'present',
-}
+#package { 'httpd':
+#    ensure => 'present',
+#}
 
 #service { 'httpd':
 #    ensure => 'running',
@@ -33,7 +33,7 @@ wget::fetch { 'https://repos.fedorapeople.org/repos/pulp/pulp/rhel-pulp.repo':
     verbose     => true,
 }
 
-$pkg_list = [ 'qpid-cpp-server', 'qpid-cpp-server-linearstore', 'pulp-server', 'python-gofer-qpid', 'python-qpid', 'qpid-tools', 'pulp-rpm-plugins', 'pulp-puppet-plugins', 'pulp-docker-plugins', 'pulp-admin-client', 'pulp-rpm-admin-extensions', 'pulp-puppet-admin-extensions', 'pulp-docker-admin-extensions' ]
+$pkg_list = [ 'qpid-cpp-server', 'qpid-cpp-server-linearstore', 'pulp-server', 'python-gofer-qpid', 'python-qpid', 'qpid-tools', 'pulp-rpm-plugins', 'pulp-puppet-plugins', 'pulp-docker-plugins', 'pulp-admin-client', 'pulp-rpm-admin-extensions', 'pulp-puppet-admin-extensions', 'pulp-docker-admin-extensions' , 'httpd' , 'mod_ssl' ]
 
 package { $pkg_list:
     ensure => 'present',
@@ -47,15 +47,15 @@ class {'::mongodb::server':
 
 class {'::mongodb::client':}
 
-mongodb_user { myUserAdmin:
-  name          => 'myUserAdmin',
-  ensure        => present,
-  password_hash => mongodb_password('myUserAdmin', 'abc123'),
-  database      => admin,
-  roles         => ['userAdminAnyDatabase'],
-  tries         => 10,
-  require       => Class['mongodb::server'],
-}
+#mongodb_user { myUserAdmin:
+#  name          => 'myUserAdmin',
+#  ensure        => present,
+#  password_hash => mongodb_password('myUserAdmin', 'abc123'),
+#  database      => admin,
+#  roles         => ['userAdminAnyDatabase'],
+#  tries         => 10,
+#  require       => Class['mongodb::server'],
+#}
 
 
 #mongodb::db { 'pulp_database':
@@ -74,16 +74,24 @@ mongodb_user { pulpadmin:
   ensure        => present,
   password_hash => mongodb_password('pulpadmin', 'qwedsa'),
   database      => pulp_database,
-  roles         => ['readWrite'],
+  roles         => ['readWrite', 'dbAdmin'],
   tries         => 10,
   require       => Class['mongodb::server'],
 }
 
-class { '::pulp::admin':
-  verify_ssl => false
-}
+#file { 'mongorc.js':
+#    path          => '/root/.mongorc.js',
+#    ensure        => file,
+#    require       => Mongodb_user['siteUserAdmin'],
+#    content       => template('my_profiles/mongo/mongorc.js.erb'),
+#}
 
 #class {'::pulp::server':}
+
+#class { '::pulp::admin':
+#  verify_ssl => false
+#}
+
 #class { '::pulp::admin':
 #  verify_ssl => false
 #}
