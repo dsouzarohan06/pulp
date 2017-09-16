@@ -41,6 +41,7 @@ service { [ 'httpd', 'qpidd' ]:
 exec { 'Generating pulp certificates':
   command => 'pulp-gen-key-pair && pulp-gen-ca-certificate',
   path    => '/usr/bin',
+  notify => Service['httpd'],
 }
 
 class {'::mongodb::server':
