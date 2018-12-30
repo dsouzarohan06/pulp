@@ -1,0 +1,253 @@
+---
+ensure_default_firewall: false
+
+hosts::host_entries:
+  'pulp-austin.india.endurance.com':
+    ip: '172.17.160.47'
+
+packages:
+  qpid-cpp-server:
+    ensure: 'installed'
+  qpid-cpp-server-linearstore:
+    ensure: 'installed'
+  pulp-server:
+    ensure: 'installed'
+  python-gofer-qpid:
+    ensure: 'installed'
+  python-qpid:
+    ensure: 'installed'
+  qpid-tools:
+    ensure: 'installed'
+  pulp-rpm-plugins:
+    ensure: 'installed'
+  pulp-puppet-plugins:
+    ensure: 'installed'
+  pulp-docker-plugins:
+    ensure: 'installed'
+  pulp-admin-client:
+    ensure: 'installed'
+  pulp-rpm-admin-extensions:
+    ensure: 'installed'
+  pulp-puppet-admin-extensions:
+    ensure: 'installed'
+  pulp-docker-admin-extensions:
+    ensure: 'installed'
+  python2-yamlordereddictloader:
+    ensure: 'installed'
+  httpd:
+    ensure: 'installed'
+  mongodb:
+    ensure: 'absent'
+  mongodb-server:
+    ensure: 'absent'
+
+files:
+  '/etc/pulp/pulp.yaml':
+    source: 'puppet:///modules/profile/pulp/pulp.yaml'
+  '/etc/httpd/conf.d/ssl.conf':
+    ensure: 'present'
+    source: 'puppet:///modules/profile/pulp/ssl.conf'
+    notify: Service[httpd]
+  '/etc/httpd/certs':
+    ensure: 'directory'
+  '/etc/httpd/certs/india.endurance.com.crt':
+    ensure: 'present'
+    source: 'puppet:///modules/profile/pulp/india.endurance.com.crt'
+    notify: Service[httpd]
+    require: File[/etc/httpd/certs]
+  '/etc/httpd/certs/india.endurance.com.key':
+    ensure: 'present'
+    source: 'puppet:///modules/profile/pulp/india.endurance.com.key'
+    notify: Service[httpd]
+    require: File[/etc/httpd/certs]
+  '/var/lib/mongo':
+    ensure: 'directory'
+    owner: 'mongod'
+    group: 'mongod'
+    mode: '0750'
+  '/usr/lib64/nagios/plugins/custom/check_sync_time.sh':
+    ensure: 'present'
+    source: 'puppet:///modules/profile/pulp/check_sync_time.sh'
+    mode: '0755'
+
+crons:
+  'Pulp Sync':
+    command: '/opt/scripts/sync-script.py'
+    user: 'root'
+    minute: '*/20'
+
+wget::fetch:
+  'https://repos.fedorapeople.org/repos/pulp/pulp/rhel-pulp.repo':
+     destination: '/etc/yum.repos.d/'
+     timeout: 15
+     verbose: true
+
+pulp::server::db_name: 'pulp_database'
+pulp::server::db_username: 'pulpadmin'
+pulp::server::db_password: ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAGuXBaVAt1sktykufQ+Cw7v8doRfcktoGYQXAFVOrFRBrTdIhpeOhXpm9vjpeiXRVxQMvfjyP+6qjL8l2Rx1RmWSyhAhYuzezQZSRQs3rqDGI9P5cocktUx+37hUGRmAgLBRIim7e/MjVa9NOCQbIO+EC8uXhZPw8Xfu3fVRZeIzvenURwUcjUaMO5Xhe+yB8/voADyzJ1DdFYeWHupEaXh6OKo0z64+ycp3km4TR/mytAejLKfz8132KJuKt2tgTu7ziINPE1DVoU+q+qv9PQr7dMe0DYgqa8oIxIeRWVIcFsKzM43W2BrhmYn4IRVq+GmHqs0b2ZdpPzunT+i3j3jA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBD+DagasiB5t3l02psKDx9ggBBWDGXZx2Mxl91ASDXGSlMG]
+pulp::server::default_login: 'pulp'
+pulp::server::default_password: ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAbo8oyTHftjLkWchAlvTBuqZwI3ky5g9rDHOGzU0Rq3FgpZa+J2v8BygK0qBzKnboKQ6Jy4EZUOhfAUWMcPnS+2DvCTbJuTZntE8GkX7pCyCSRx4UJzzt6X0x1Nv8unKGQ2o7RP+xydavOnY0ri5RJqiqJbhvup/SdHaj0M9lMOya2wrlIRdP5uw9u+SYCYdXCAbWY2D0ESB0/XNVFIooZVTEepkOLeJRHBPYv5C5w6gwLqqv7JyywL0rNIBJOUJ5OG8YoNc2nywhdhtWV9klGc2d88ml9+9Uv2PUQtLNPpQLrybpV3NdTl4GAqHrjv65dEZimSBv6y1JNHb3Swt4kTA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBBexU0oBqYGi1UTBZbKqRPagBCMQq8k3zM+8aC9tpS7u9Bq]
+
+pulp::admin::pulp_server: "%{fqdn}"
+pulp::admin::verify_ssl: false
+
+pulp::server::authldapbindpassword: ENC[PKCS7,MIIBiQYJKoZIhvcNAQcDoIIBejCCAXYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAR4w3bfsBFHuiwdVnCSjaMexCiPmknc0st9FprdABh3FeZToj0z46MqW0QINmTCsHrVSIvmL0J+FG8gIfQu07y2k8Kl3Wyzi61WHnafn/SGv+1B+DG1HSJM7n+LmiOs7i3WOcnBRGk+7Am0SWixyVPx7YxKdbJxp/nqYthHJBIk2Db6d61zwL5ZhOWe6Q9g9u3gorHgQup7HxiIme9FRiks68ji713uEJfvSDtorlttz0hgtX6yf0iGFZst4gFUPklKn3YLWrumQ+YBCc6d50XncsczIIvfCcEhGyLoP0MIzWg3bdgZcmiiX11/iIi5cmzEeRwRJqzzsJGbrj1JOb7zBMBgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBCe6JJq68zSPg8V7XadAQ1fgCCOZVj2Gy7kErRb0DAThP5SnQYrvpxTh1I0O1qOEwvkeQ==]
+
+yumrepos:
+  'mongodb':
+    name: "mongodb"
+    descr: "MongoDB Repository"
+    ensure: 'present'
+    baseurl: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/"
+    gpgcheck: 0
+    enabled: 1
+    sslverify: 0
+
+mongodb::globals::manage_package_repo: false
+mongodb::globals::manage_package: true
+mongodb::server::package_name: 'mongodb-org'
+
+mongodb::server::auth: true
+#mongodb::server::create_admin: true
+#mongodb::server::admin_username: 'myUserAdmin'
+#mongodb::server::admin_password: ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAACJ/+M6ZXZ3dzSSVBECsJ8CM9uN1cOXcsk4y5CWuqwcvz3KTyW3NtsatIqcwCN0VP3vGRAtBRH9pMJgxl0Vv7ZwtKMyVYdPna0e5uu+ALTfekT12ozapLXjsQiJOQV5gaU6KHUysXtJwMOZ4kGuuk+WSU3ics62fNk5lh8erqc61s3mObuvzGPDe6JSTHFgSnwnnd7nNQVu665F2rkQvsrK/WlrEpjqFiQsM66jkguGfs854p9adk5cNP4KlIooo9l7YptrxqL69Z97CrZIS8X2Ed+PACx0hyg1lg5bnI10JFZp/G5PEeEiC/ItCzyuat2rQSW5RXhU08QM17igbSTA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBCpn0f5XuerUO8J/0Fi91iFgBDh08ZOqRdVxMji1fXfaRLI]
+
+mongodb::server::port: '27017'
+mongodb::server::verbose: true
+
+#pulp::database:
+#  'pulp_database':
+#    user: 'pulpadmin'
+#    password_hash: 'd96b3a442946c49b1a761e5ff5af0fff'
+#    roles: ['readWrite', 'dbAdmin']
+
+pulp::exec:
+  'Generating Pulp certs':
+    command: 'pulp-gen-key-pair && pulp-gen-ca-certificate'
+    path: '/usr/bin'
+    notify: Service[httpd]
+    onlyif: ['test ! -f /etc/pki/pulp/rsa.key', 'test ! -f /etc/pki/pulp/rsa_pub.key']
+  'Removing default usernames and passwords':
+    command: '/opt/scripts/delete_default_users.sh'
+    path: '/usr/bin'
+
+services:
+  'httpd':
+    ensure: 'running'
+    enable: 'true'
+  'qpidd':
+    ensure: 'running'
+    enable: 'true'
+
+logrotate::rules:
+  mongodb:
+    path: ['/var/log/mongodb/mongod.log']
+    dateext: true
+    compress: true
+    rotate: 5
+    rotate_every: 'day'
+    ifempty: true
+    missingok: true
+    copytruncate: true
+    delaycompress: true
+    postrotate: "systemctl restart mongod.service"
+  httpd:
+    path: ['/var/log/httpd/*.log']
+    dateext: true
+    compress: true
+    rotate: 7
+    rotate_every: 'day'
+    ifempty: true
+    missingok: true
+    delaycompress: true
+    postrotate: "systemctl reload httpd"
+
+users:
+  nagios:
+    ensure: 'present'
+    sshkeys: ['ssh-dss AAAAB3NzaC1kc3MAAACBAI2dCusZ6KwJegzdNESRhhfBxy6Xx8TC2uMfYSmcCoiLQQlbgXYFA3ezsqeczzr6SQScXGkiR/yFAVv/t08bR06rHuPXvhKtueYhQdeaWqgpIs5znMNbnPUEJzslA7FGgQAWvCnyZaZBqP2/iSeykVx0Y0JjYqkTC1Ef4kW8eNDNAAAAFQC0GSodGjJLnce4AyQcDg6hqh2D2wAAAIAoF4O97aNgLNvpI+YKfPVTVy8FgnnS13bRuAKhTUweyKwjQGAvGoqd1I8lkK7iRZfQDFHslXjfKS5cc53/+6Nt6e7eXuBaxmOZ+0HyMmORHkGhIa6FyX6xBK36uk0re2aKCM2SNDEFgW3tDnvh9JSpL7+s5ISLy6aoHk3SbCtNVwAAAIAcnkAsVd0KWRUi3L2ROdLuGkDkjlcDGOKpTZfT/ObN3VN3CsQdcEy2xY31zlGPSYZ4l5sVdCnTZQ0PS+Uwa4muDgfXk9pyHaTdoKS+t/Hu2iwl2o4FYDvnT0+DQuHDQjP7VoePdBefq6Cmijj3uEZ/LrqWSP+N3hDz9OSbnMNDXg== icinga']
+
+auditd::main_rules:
+  - '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change'
+  - '-a always,exit -F arch=b32 -S clock_settime -k time-change'
+  - '-w /etc/localtime -p wa -k time-change'
+  - '-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change'
+  - '-a always,exit -F arch=b64 -S clock_settime -k time-change'
+  - '-w /etc/group -p wa -k identity'
+  - '-w /etc/passwd -p wa -k identity'
+  - '-w /etc/gshadow -p wa -k identity'
+  - '-w /etc/shadow -p wa -k identity'
+  - '-w /etc/security/opasswd -p wa -k identity'
+  - '-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+  - '-w /etc/issue -p wa -k system-locale'
+  - '-w /etc/issue.net -p wa -k system-locale'
+  - '-w /etc/hosts -p wa -k system-locale'
+  - '-w /etc/sysconfig/network -p wa -k system-locale'
+  - '-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale'
+  - '-w /etc/selinux/ -p wa -k MAC-policy'
+  - '-w /var/run/faillock/ -p wa -k logins'
+  - '-w /var/log/lastlog -p wa -k logins'
+  - '-w /var/run/utmp -p wa -k session'
+  - '-w /var/log/wtmp -p wa -k session'
+  - '-w /var/log/btmp -p wa -k session'
+  - '-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod'
+  - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+  - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+  - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access'
+  - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access'
+  - '-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+  - '-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts'
+  - '-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+  - '-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete'
+  - '-w /etc/sudoers -p wa -k scope'
+  - '-w /etc/sudoers.d -p wa -k scope'
+  - '-w /var/log/sudo.log -p wa -k actions'
+  - '-w /sbin/insmod -p x -k modules'
+  - '-w /sbin/rmmod -p x -k modules'
+  - '-w /sbin/modprobe -p x -k modules'
+  - '-a always,exit -F arch=b32 -S init_module -S delete_module -k modules'
+  - '-a always,exit -F arch=b64 -S init_module -S delete_module -k modules'
+auditd::finalize_rules:
+  - '-e 1'
+
+rsyslog::client::inputs:
+  pulpmongodlog_imfile:
+    type: 'imfile'
+    config:
+      File: '/var/log/mongodb/mongod.log'
+      Tag: 'pulpmongodlog'
+      Facility: 'local3'
+      addMetadata: 'on'
+  pulpaccesslog_imfile:
+    type: 'imfile'
+    config:
+      File: '/var/log/httpd/access_log'
+      Tag: 'pulpaccesslog'
+      Facility: 'local3'
+      addMetadata: 'on'
+  pulperrorlog_imfile:
+    type: 'imfile'
+    config:
+      File: '/var/log/httpd/error_log'
+      Tag: 'pulperrorlog'
+      Facility: 'local3'
+      addMetadata: 'on'
+  pulpsslaccesslog_imfile:
+    type: 'imfile'
+    config:
+      File: '/var/log/httpd/ssl_access_log'
+      Tag: 'pulpsslaccesslog'
+      Facility: 'local3'
+      addMetadata: 'on'
+  pulpsslerrorlog_imfile:
+    type: 'imfile'
+    config:
+      File: '/var/log/httpd/ssl_error_log'
+      Tag: 'pulpsslerrorlog'
+      Facility: 'local3'
+      addMetadata: 'on'

@@ -76,7 +76,6 @@ htmlTemplateLogin = """
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
   <title>-- title --</title>
-
 <style>
 	body {
 	font-family: Helvetica;	 
@@ -118,7 +117,6 @@ htmlTemplateLogin = """
 </head>
 <body>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
-
   <tbody>
     <tr>
       <td>
@@ -134,9 +132,7 @@ htmlTemplateLogin = """
     </tr>
   </tbody>
 </table>
-
 <br>
-
 <br>
 """ + htmlfooter + """
 </body></html>
@@ -150,7 +146,6 @@ htmlTemplateUpload = """
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
   <title>-- title --</title>
-
 <style>
 	body {
 	font-family: Helvetica;	 
@@ -197,7 +192,6 @@ htmlTemplateUpload = """
 </head>
 <body>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
-
   <tbody>
     <tr>
       <td>
@@ -219,9 +213,7 @@ htmlTemplateUpload = """
     </tr>
   </tbody>
 </table>
-
 <br>
-
 <br>
 """ + htmlfooter + """
 </body></html>
@@ -235,7 +227,6 @@ htmlTemplateEdit = """
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
   <title>-- title --</title>
-
 <style>
 	body {
 	font-family: Helvetica;	 
@@ -282,7 +273,6 @@ htmlTemplateEdit = """
 </head>
 <body>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
-
   <tbody>
     <tr>
       <td>
@@ -304,9 +294,7 @@ htmlTemplateEdit = """
     </tr>
   </tbody>
 </table>
-
 <br>
-
 <br>
 """ + htmlfooter + """
 </body></html>
@@ -321,7 +309,6 @@ htmlTemplate = """
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
   <title>-- title --</title>
-
 <style>
 	body {
 	font-family: Helvetica;	 
@@ -346,16 +333,13 @@ htmlTemplate = """
 	color:#0000FF;
 	text-decoration: none;        
     }
-
     .dirlink {
 	color:#0000FF;
 	text-decoration: none;
     }
-
     .dirlink:hover {
 	text-decoration:underline;        
     }
-
     .filestyle {
 	color:#006600;
 	text-decoration: none;
@@ -365,7 +349,6 @@ htmlTemplate = """
 	color:blue;
 	text-decoration: none;	
     }
-
     .filelink:hover {
 	text-decoration:underline;        
     }
@@ -374,13 +357,11 @@ htmlTemplate = """
 	background-color: black;
 	color: white;
     }
-
     .headrowfolder {
 	background-color: #4444ff;
 	width: 16px;
 	height: 16px;
     }
-
     .headrowfile {
 	background-color: #006600;
 	width: 16px;
@@ -403,13 +384,11 @@ htmlTemplate = """
 	width: 16px;
 	height: 16px;
     }
-
     .headmovefile {
 	background-color: #969696;
 	width: 16px;
 	height: 16px;
     }
-
     .rowfile:hover {
 	background-color: #999999;
     }
@@ -453,7 +432,6 @@ htmlTemplate = """
     
         
     }
-
     function createfile()
     {
       var newfilename = prompt("write name of new file", "new_file.txt");
@@ -491,13 +469,9 @@ htmlTemplate = """
 </head>
 <body>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
-
   <tbody>
     <tr>
       <td>Server => <!-- domain --></td>
-    </tr>
-    <tr>
-      <td>Last synced at: </td>
     </tr>
     <tr style ="background-color: black; color: white">
       <td><!-- realfolder --></td>
@@ -517,9 +491,7 @@ htmlTemplate = """
     </tr>
   </tbody>
 </table>
-
 <br>
-
 <br>
 """ + htmlfooter + """
 </body></html>
@@ -545,7 +517,6 @@ strFiles = "<table cellpadding='2' cellspacing='2' border='0'>\r\n" + \
            "    <td></td>\r\n" + \
            "    <td></td>\r\n" + \
            "    <td class='headFiles' width='59%'>Document name</td>\r\n" + \
-           "    <td class='headFiles' width='20%'>Last update</td>\r\n" + \
            "    <td class='headFiles' width='20%'>File size</td>\r\n" + \
            "  </tr>\r\n"
 
@@ -862,7 +833,7 @@ if action == "logout":
 if action == "login":
   # login page request
   # update informations
-  htmlTemplateLogin = htmlTemplateLogin.replace("-- title --", "Pulp Server 2.13")
+  htmlTemplateLogin = htmlTemplateLogin.replace("-- title --", "Pulp Server v2.14")
   htmlTemplateLogin = htmlTemplateLogin.replace("<!-- SCRIPTNAME -->", pyname)
   print "Content-type: text/html"
   print
@@ -1058,7 +1029,7 @@ if action == "list":
   htmlTemplate = htmlTemplate.replace("<!-- domain -->", cgi.escape(hostName))
   htmlTemplate = htmlTemplate.replace("<!-- folder -->", cgi.escape(vfolder))
   htmlTemplate = htmlTemplate.replace("<!-- realfolder -->", cgi.escape(rfolder))
-  htmlTemplate = htmlTemplate.replace("-- title --", "Pulp Server 2.13")
+  htmlTemplate = htmlTemplate.replace("-- title --", "Pulp Server v2.14")
   
   # retrieve folder items list
   folderfile = os.listdir(rfolder)
@@ -1091,7 +1062,7 @@ elif action == "upload":
   
   # update informations
   htmlTemplateUpload = htmlTemplateUpload.replace("<!-- virtualfolder -->", vfolder)
-  htmlTemplateUpload = htmlTemplateUpload.replace("-- title --", "Pulp Server 2.13")
+  htmlTemplateUpload = htmlTemplateUpload.replace("-- title --", "Pulp Server v2.14")
   htmlTemplateUpload = htmlTemplateUpload.replace("<!-- SCRIPTNAME -->", pyname)
 
   print htmlTemplateUpload
@@ -1105,7 +1076,7 @@ elif action == "edit":
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- virtualfolder -->", vfolder)
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- FILEPATH -->", "Edit " + vfolder + "/" + editFile)
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- FILENAME -->", editFile)
-  htmlTemplateEdit = htmlTemplateEdit.replace("-- title --", "Pulp Server 2.13")
+  htmlTemplateEdit = htmlTemplateEdit.replace("-- title --", "Pulp Server v2.14")
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- SCRIPTNAME -->", pyname)
   
   fd = open(os.path.join(rfolder, editFile), "r")
@@ -1119,7 +1090,4 @@ elif action == "edit":
   htmlTemplateEdit = htmlTemplateEdit.replace("<!-- FILECONTENT -->", filecontent)
   
   print htmlTemplateEdit
-
-
-
 

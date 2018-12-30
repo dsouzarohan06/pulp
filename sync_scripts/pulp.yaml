@@ -1,0 +1,49 @@
+repos:
+  sysad-el7_x86_64:
+    type: "local"
+    source: "sysad-el7_x86_64/"
+  sysad-el6_x86_64:
+    type: "local"
+    source: "sysad-el6_x86_64/"
+  hosting-backup-rhl6-x86_64:
+    type: "local"
+    source: "hosting-backup-rhl6-x86_64/"
+  whi:
+    type: "local"
+    source: "whi/"
+  directi5:
+    type: "local"
+    source: "directi5/"
+  mail-5-i386:
+    type: "local"
+    source: "mail-5-i386/"
+  hosting-custom-rhel5-x86_64:
+    type: "local"
+    source: "hosting-custom-rhel5-x86_64/"
+  mail-5-x86_64:
+    type: "local"
+    source: "mail-5-x86_64/"
+  mail-6-x86_64:
+    type: "local"
+    source: "mail-6-x86_64/"
+  obox-5-x86_64:
+    type: "local"
+    source: "obox-5-x86_64/"
+  obox-6-x86_64:
+    type: "local"
+    source: "obox-6-x86_64/"
+  hosting-custom-rhl6-86_64:
+    type: "local"
+    source: "hosting-custom-rhl6-86_64/"
+  ppg:
+    type: "local"
+    source: "ppg/"
+  ppg6:
+    type: "local"
+    source: "ppg6/"
+  sysad-el5_x86_64:
+    type: "local"
+    source: "sysad-el5_x86_64/"
+  obox-7-x86_64:
+    type: "local"
+    source: "obox-7-x86_64/"
